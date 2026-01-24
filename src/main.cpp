@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <sys/mman.h>
@@ -25,6 +25,7 @@
 
 #include "pl/Hook.h"
 #include "pl/Gloss.h"
+#include "pl/Signature.h"
 
 #include <functional>
 
@@ -175,6 +176,24 @@ static void Setup() {
     
     tryHook();
 }
+*/
+
+#include <jni.h>
+#include <android/log.h>
+#include <dlfcn.h>
+#include <cstring>
+#include <cstdint>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <fstream>
+#include <string>
+
+//#include "common/transition.h"
+#include "pl/Gloss.h"
+
+#define LOG_TAG "HmmAja"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 static void (*g_Item_appendFormattedHovertext_orig)(
     void* /*this*/,
@@ -317,12 +336,12 @@ extern "C" __attribute__((visibility("default")))
 void LeviMod_Load() {
     GlossInit(true);
     if(!findAndHookItemAppendHovertext()) LOGE("Error Cant hook!");
-    Setup();
+    //Setup();
 }
 
 __attribute__((constructor))
 void AssetsManager_Init() {
     GlossInit(true);
     if(!findAndHookItemAppendHovertext()) LOGE("Error Cant hook!");
-    Setup();
+    //Setup();
 }
