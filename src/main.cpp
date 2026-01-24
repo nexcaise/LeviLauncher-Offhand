@@ -26,9 +26,63 @@
 #include "pl/Hook.h"
 #include "pl/Gloss.h"
 
+#include <functional>
+
 #define TAG "Shaders Loader"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
+
+namespace Core {
+    template <typename T>
+    class PathBuffer;
+}
+
+namespace Bedrock {
+    template <typename T>
+    class NotNullNonOwnerPtr;
+}
+
+class IContentTierManager;
+class ResourcePackManager;
+
+ResourcePackManager* rpm = nullptr;
+
+using ResourcePackManager_ctor_t = void (*)(ResourcePackManager* _this, std::function<Core::PathBuffer<std::string>()> getPath, const Bedrock::NotNullNonOwnerPtr<const IContentTierManager>& contentTierManager, bool needsToInitialize);
+
+static ResourcePackManager_ctor_t rpm_orig = nullptr;
+
+static void rpm_hook(ResourcePackManager* _this, std::function<Core::PathBuffer<std::string>()> getPath, const Bedrock::NotNullNonOwnerPtr<const IContentTierManager>& contentTierManager, bool needsToInitialize) {
+    ResourcePackManager* thisPtr = _this;
+
+    if(needsToInitialize) {
+        rpm = thisPtr;
+    }
+    
+    return rpm_orig(_this, getPath, contentTierManager, needsToInitialize);
+}
+
+static void findAndHook() {
+    uintptr_t addr = pl::signature::pl_resolve_signature(
+        "FF ? 02 D1 FD 7B ? A9 ? ? ? ? FA 67 ? A9 F8 5F ? A9 F6 57 ? A9 F4 4F ? A9 FD ? 01 91 ? D0 3B D5 ? 03 03 2A ? 03 02 AA ? 17 40 F9 F3 03 00 AA A8 83 1F F8",
+        "libminecraftpe.so"
+    );
+
+    if (!addr) {
+        LOGE("Signature Not found!");
+        return;
+    }
+    
+    LOGI("Signature addr: %p", (void*)addr);
+    
+    int r = pl::hook::pl_hook((pl::hook::FuncPtr)addr, (pl::hook::FuncPtr)gtw_hook, (pl::hook::FuncPtr*)&gtw_orig, pl::hook::PriorityHighest);
+    
+    if(r != 0) {
+        LOGE("Failed to Hook = %d", r);
+        return;
+    } else {
+        LOGI("Successfully = %d", r);
+    }
+}
 
 std::string dataDir = "/storage/emulated/0/games";
 std::vector<std::string> shadersList;
@@ -79,9 +133,9 @@ static void tryHook() {
     
     if(r != 0) {
         LOGE("Failed to Hook = %d", r);
-        return;
     } else {
         LOGI("Successfully = %d", r);
+        findAndHook();
     }
 }
 
@@ -122,14 +176,153 @@ static void Setup() {
     tryHook();
 }
 
+static void (*g_Item_appendFormattedHovertext_orig)(
+    void* /*this*/,
+    void* /*ItemStackBase*/,
+    void* /*Level*/,
+    std::string* /*out*/,
+    bool /*advanced*/
+) = nullptr;
+
+static void Item_appendFormattedHovertext_hook(
+    void* thisPtr,
+    void* itemStack,
+    void* level,
+    std::string* out,
+    bool advanced
+) {
+    if (out) {
+        out->append("\n§7[Hooked appendFormattedHovertext]");
+    }
+    if (g_Item_appendFormattedHovertext_orig) {
+        g_Item_appendFormattedHovertext_orig(
+            thisPtr,
+            itemStack,
+            level,
+            out,
+            true/*advanced*/
+        );
+    }
+}
+
+static bool findAndHookItemAppendHovertext() {
+    void* mcLib = dlopen("libminecraftpe.so", RTLD_NOLOAD);
+    if (!mcLib) mcLib = dlopen("libminecraftpe.so", RTLD_LAZY);
+    if (!mcLib) {
+        LOGE("Failed to open libminecraftpe.so");
+        return false;
+    }
+
+    const char* typeinfoName = "4Item";
+    size_t nameLen = strlen(typeinfoName);
+
+    uintptr_t typeinfoNameAddr = 0;
+    uintptr_t typeinfoAddr = 0;
+    uintptr_t vtableAddr = 0;
+
+    std::ifstream maps("/proc/self/maps");
+    std::string line;
+
+    // 🔍 cari "4Item"
+    while (std::getline(maps, line)) {
+        if (line.find("libminecraftpe.so") == std::string::npos) continue;
+        if (line.find("r--p") == std::string::npos &&
+            line.find("r-xp") == std::string::npos) continue;
+
+        uintptr_t start, end;
+        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+
+        for (uintptr_t addr = start; addr < end - nameLen; addr++) {
+            if (memcmp((void*)addr, typeinfoName, nameLen) == 0) {
+                typeinfoNameAddr = addr;
+                LOGI("Found Item typeinfo name at 0x%lx", addr);
+                break;
+            }
+        }
+        if (typeinfoNameAddr) break;
+    }
+
+    if (!typeinfoNameAddr) {
+        LOGE("Failed to find Item typeinfo name");
+        return false;
+    }
+
+    // 🔍 cari typeinfo
+    std::ifstream maps2("/proc/self/maps");
+    while (std::getline(maps2, line)) {
+        if (line.find("libminecraftpe.so") == std::string::npos) continue;
+        if (line.find("r--p") == std::string::npos) continue;
+
+        uintptr_t start, end;
+        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+
+        for (uintptr_t addr = start; addr < end - sizeof(void*); addr += sizeof(void*)) {
+            if (*(uintptr_t*)addr == typeinfoNameAddr) {
+                typeinfoAddr = addr - sizeof(void*);
+                LOGI("Found Item typeinfo at 0x%lx", typeinfoAddr);
+                break;
+            }
+        }
+        if (typeinfoAddr) break;
+    }
+
+    if (!typeinfoAddr) {
+        LOGE("Failed to find Item typeinfo");
+        return false;
+    }
+
+    // 🔍 cari vtable
+    std::ifstream maps3("/proc/self/maps");
+    while (std::getline(maps3, line)) {
+        if (line.find("libminecraftpe.so") == std::string::npos) continue;
+        if (line.find("r--p") == std::string::npos) continue;
+
+        uintptr_t start, end;
+        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+
+        for (uintptr_t addr = start; addr < end - sizeof(void*); addr += sizeof(void*)) {
+            if (*(uintptr_t*)addr == typeinfoAddr) {
+                vtableAddr = addr + sizeof(void*);
+                LOGI("Found Item vtable at 0x%lx", vtableAddr);
+                break;
+            }
+        }
+        if (vtableAddr) break;
+    }
+
+    if (!vtableAddr) {
+        LOGE("Failed to find Item vtable");
+        return false;
+    }
+
+    // 🎯 index 54
+    uintptr_t* slot = (uintptr_t*)(vtableAddr + 54 * sizeof(void*));
+    g_Item_appendFormattedHovertext_orig =
+        (decltype(g_Item_appendFormattedHovertext_orig))(*slot);
+
+    LOGI("Original appendFormattedHovertext at 0x%lx",
+         (uintptr_t)g_Item_appendFormattedHovertext_orig);
+
+    // 🛠️ patch vtable
+    uintptr_t page = (uintptr_t)slot & ~(4095UL);
+    mprotect((void*)page, 4096, PROT_READ | PROT_WRITE);
+    *slot = (uintptr_t)&Item_appendFormattedHovertext_hook;
+    mprotect((void*)page, 4096, PROT_READ);
+
+    LOGI("Successfully hooked Item::appendFormattedHovertext");
+    return true;
+}
+
 extern "C" __attribute__((visibility("default")))
 void LeviMod_Load() {
     GlossInit(true);
+    if(!findAndHookItemAppendHovertext()) LOGE("Error Cant hook!");
     Setup();
 }
 
 __attribute__((constructor))
 void AssetsManager_Init() {
     GlossInit(true);
+    if(!findAndHookItemAppendHovertext()) LOGE("Error Cant hook!");
     Setup();
 }
