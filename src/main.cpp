@@ -210,9 +210,6 @@ static void Item_appendFormattedHovertext_hook(
     std::string* out,
     bool advanced
 ) {
-    if (out) {
-        out->append("\n§7[Hooked appendFormattedHovertext]");
-    }
     if (g_Item_appendFormattedHovertext_orig) {
         g_Item_appendFormattedHovertext_orig(
             thisPtr,
@@ -221,6 +218,9 @@ static void Item_appendFormattedHovertext_hook(
             out,
             true/*advanced*/
         );
+    }
+    if (out) {
+        out->append("\n§7[Hooked appendFormattedHovertext]");
     }
 }
 
@@ -232,7 +232,7 @@ static bool findAndHookItemAppendHovertext() {
         return false;
     }
 
-    const char* typeinfoName = "4Item";
+    const char* typeinfoName = "9BlockItem";
     size_t nameLen = strlen(typeinfoName);
 
     uintptr_t typeinfoNameAddr = 0;
