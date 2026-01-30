@@ -28,7 +28,7 @@ static void ShulkerBoxBlockItem_appendFormattedHovertext_hook(
     std::string& out,
     bool flag)
 {
-    if (ShulkerBoxBlockItem_appendFormattedHovertext_orig) ShulkerBoxBlockItem_appendFormattedHovertext_orig(self, stack, level, out, flag);
+    if (g_ShulkerBoxBlockItem_appendFormattedHovertext_orig) g_ShulkerBoxBlockItem_appendFormattedHovertext_orig(self, stack, level, out, flag);
 
     out.append("\n§7[Hooked appendFormattedHovertext]");
 }
@@ -136,5 +136,5 @@ static bool findAndHookShulkerBoxBlockItem() {
 __attribute__((constructor))
 void Init() {
     GlossInit(true);
-    if(!findAndHookItemAppendHovertext()) LOGE("Error Cant hook!");
+    if(!findAndHookShulkerBoxBlockItem()) LOGE("Error Cant hook!");
 }
