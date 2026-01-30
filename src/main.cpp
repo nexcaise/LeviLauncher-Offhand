@@ -20,157 +20,139 @@ class ShulkerBoxBlockItem;
 using Shulker_appendHover_t =
     void (*)(void*, ItemStackBase*, void*, std::string&, bool);
 
-static Shulker_appendHover_t g_ShulkerBoxBlockItem_appendFormattedHovertext_orig = nullptr;
+static Shulker_appendHover_t g_orig = nullptr;
 
-static void ShulkerBoxBlockItem_appendFormattedHovertext_hook(
+static void hookFn(
     ShulkerBoxBlockItem* self,
     ItemStackBase* stack,
     void* level,
     std::string& out,
     bool flag
 ) {
-    LOGI("HOOK CALLED self=%p stack=%p", self, stack);
+    LOGI("HOOK CALLED self=%p", self);
     out.append("\n§7[Hooked appendFormattedHovertext]");
-    g_ShulkerBoxBlockItem_appendFormattedHovertext_orig(
-        self, stack, level, out, flag
-    );
+    g_orig(self, stack, level, out, flag);
 }
 
-static bool findAndHookShulkerBoxBlockItem() {
-    LOGI("Start hook");
+static bool inLib(uintptr_t fn, uintptr_t start, uintptr_t end) {
+    return fn >= start && fn <= end;
+}
 
-    void* mcLib = dlopen("libminecraftpe.so", RTLD_NOLOAD);
-    if (!mcLib) mcLib = dlopen("libminecraftpe.so", RTLD_LAZY);
-    if (!mcLib) {
-        LOGE("dlopen failed");
-        return false;
-    }
+static bool findAndHook() {
+    void* h = dlopen("libminecraftpe.so", RTLD_NOLOAD);
+    if (!h) h = dlopen("libminecraftpe.so", RTLD_LAZY);
+    if (!h) return false;
 
-    uintptr_t libBase = 0;
+    uintptr_t libStart = 0;
+    uintptr_t libEnd = 0;
     std::ifstream maps("/proc/self/maps");
     std::string line;
 
     while (std::getline(maps, line)) {
         if (line.find("libminecraftpe.so") != std::string::npos &&
             line.find("r-xp") != std::string::npos) {
-            sscanf(line.c_str(), "%lx-%*lx", &libBase);
+            sscanf(line.c_str(), "%lx-%lx", &libStart, &libEnd);
             break;
         }
     }
 
-    if (!libBase) {
-        LOGE("lib base not found");
-        return false;
-    }
+    if (!libStart || !libEnd) return false;
 
-    LOGI("lib base = 0x%lx", libBase);
-
-    const char* typeName = "19ShulkerBoxBlockItem";
-    size_t nameLen = strlen(typeName);
-    uintptr_t typeNameAddr = 0;
+    const char* name = "19ShulkerBoxBlockItem";
+    size_t len = strlen(name);
+    uintptr_t zts = 0;
 
     std::ifstream maps2("/proc/self/maps");
     while (std::getline(maps2, line)) {
         if (line.find("libminecraftpe.so") == std::string::npos) continue;
-        if (line.find("r--p") == std::string::npos &&
-            line.find("r-xp") == std::string::npos) continue;
+        if (line.find("r--p") == std::string::npos) continue;
 
-        uintptr_t start, end;
-        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+        uintptr_t s, e;
+        if (sscanf(line.c_str(), "%lx-%lx", &s, &e) != 2) continue;
 
-        for (uintptr_t addr = start; addr < end - nameLen; addr++) {
-            if (memcmp((void*)addr, typeName, nameLen) == 0) {
-                typeNameAddr = addr;
+        for (uintptr_t p = s; p < e - len; p++) {
+            if (memcmp((void*)p, name, len) == 0) {
+                zts = p;
                 break;
             }
         }
-        if (typeNameAddr) break;
+        if (zts) break;
     }
 
-    if (!typeNameAddr) {
-        LOGE("ZTS not found");
-        return false;
-    }
+    if (!zts) return false;
 
-    LOGI("ZTS = 0x%lx", typeNameAddr);
-
-    uintptr_t typeInfoAddr = 0;
+    uintptr_t zti = 0;
     std::ifstream maps3("/proc/self/maps");
-
     while (std::getline(maps3, line)) {
         if (line.find("libminecraftpe.so") == std::string::npos) continue;
         if (line.find("r--p") == std::string::npos) continue;
 
-        uintptr_t start, end;
-        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+        uintptr_t s, e;
+        if (sscanf(line.c_str(), "%lx-%lx", &s, &e) != 2) continue;
 
-        for (uintptr_t addr = start; addr < end - sizeof(void*); addr += sizeof(void*)) {
-            if (*(uintptr_t*)addr == typeNameAddr) {
-                typeInfoAddr = addr - sizeof(void*);
+        for (uintptr_t p = s; p < e; p += sizeof(void*)) {
+            if (*(uintptr_t*)p == zts) {
+                zti = p - sizeof(void*);
                 break;
             }
         }
-        if (typeInfoAddr) break;
+        if (zti) break;
     }
 
-    if (!typeInfoAddr) {
-        LOGE("ZTI not found");
-        return false;
-    }
+    if (!zti) return false;
 
-    LOGI("ZTI = 0x%lx", typeInfoAddr);
-
-    uintptr_t vtableAddr = 0;
+    uintptr_t vtable = 0;
     std::ifstream maps4("/proc/self/maps");
-
     while (std::getline(maps4, line)) {
         if (line.find("libminecraftpe.so") == std::string::npos) continue;
         if (line.find("r--p") == std::string::npos) continue;
 
-        uintptr_t start, end;
-        if (sscanf(line.c_str(), "%lx-%lx", &start, &end) != 2) continue;
+        uintptr_t s, e;
+        if (sscanf(line.c_str(), "%lx-%lx", &s, &e) != 2) continue;
 
-        for (uintptr_t addr = start; addr < end - sizeof(void*); addr += sizeof(void*)) {
-            if (*(uintptr_t*)addr == typeInfoAddr) {
-                vtableAddr = addr + sizeof(void*);
+        for (uintptr_t p = s; p < e; p += sizeof(void*)) {
+            if (*(uintptr_t*)p == zti) {
+                vtable = p + sizeof(void*);
                 break;
             }
         }
-        if (vtableAddr) break;
+        if (vtable) break;
     }
 
-    if (!vtableAddr) {
-        LOGE("vtable not found");
-        return false;
+    if (!vtable) return false;
+
+    LOGI("VTABLE = 0x%lx", vtable);
+
+    uintptr_t* vt = (uintptr_t*)vtable;
+
+    for (int i = 0; i < 128; i++) {
+        uintptr_t fn = vt[i];
+        if (!fn) break;
+
+        if (!inLib(fn, libStart, libEnd)) continue;
+
+        LOGI("vtable[%d] = %p", i, (void*)fn);
+
+        if (!g_orig) {
+            g_orig = (Shulker_appendHover_t)fn;
+
+            uintptr_t page = ((uintptr_t)&vt[i]) & ~(4095UL);
+            mprotect((void*)page, 4096, PROT_READ | PROT_WRITE);
+            vt[i] = (uintptr_t)&hookFn;
+            mprotect((void*)page, 4096, PROT_READ);
+
+            LOGI("HOOKED INDEX = %d", i);
+            return true;
+        }
     }
 
-    LOGI("VTABLE = 0x%lx", vtableAddr);
-
-    uintptr_t* slot53 = (uintptr_t*)(vtableAddr + 53 * sizeof(void*));
-    LOGI("vtable[53] before = %p", (void*)(*slot53));
-
-    g_ShulkerBoxBlockItem_appendFormattedHovertext_orig =
-        (Shulker_appendHover_t)(*slot53);
-
-    uintptr_t page = ((uintptr_t)slot53) & ~(4095UL);
-    if (mprotect((void*)page, 4096, PROT_READ | PROT_WRITE) != 0) {
-        LOGE("mprotect RW failed");
-        return false;
-    }
-
-    *slot53 = (uintptr_t)&ShulkerBoxBlockItem_appendFormattedHovertext_hook;
-
-    mprotect((void*)page, 4096, PROT_READ);
-
-    LOGI("vtable[53] after = %p", (void*)(*slot53));
-    LOGI("HOOK SUCCESS");
-    return true;
+    return false;
 }
 
 __attribute__((constructor))
 void Init() {
-    LOGI("Init called");
+    LOGI("Init");
     GlossInit(true);
-    if (!findAndHookShulkerBoxBlockItem())
-        LOGE("Hook FAILED");
+    if (!findAndHook())
+        LOGE("AUTO DETECT HOOK FAILED");
 }
