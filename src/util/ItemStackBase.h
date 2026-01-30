@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
-#include "sharedptr.h"
+#include "SharedPtr.h"
 
 class Item;
 class CompoundTag;
