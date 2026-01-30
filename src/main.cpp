@@ -58,7 +58,7 @@ static void tryHook() {
         return;
     }
 
-    void* sym = dlsym(lib, "_ZN12VanillaItems13registerItemsEb");
+    void* sym = dlsym(lib, "_ZN12VanillaItems13registerItemsERN6cereal13ReflectionCtxE15ItemRegistryRefRK15BaseGameVersionRK11ExperimentsE");
     if (!sym) {
         LOGE("dlsym AAssetManager_open failed");
         return;
