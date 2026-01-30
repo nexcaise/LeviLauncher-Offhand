@@ -1,7 +1,7 @@
 /// @symbolgeneration
 #pragma once
 #include <unordered_map>
-#include "mc/src/common/SharedPtr.hpp"
+#include "SharedPtr.hpp"
 
 class ItemRegistry {
 public:
