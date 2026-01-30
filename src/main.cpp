@@ -36,7 +36,7 @@ void VanillaItems_registerItems(
 		const BaseGameVersion& baseGameVersion,
 		const Experiments& experiments
 	) {
-		orig_VanillaItems_registerItems(
+		orig_AAssetManager_open(
 			self,
 			uk,
 			itemRegistry,
@@ -44,7 +44,7 @@ void VanillaItems_registerItems(
 			experiments
 		);
 
-		ItemRegistry* registry = itemRegistry._lockRegistry().get();
+		ItemRegistry& registry = itemRegistry._lockRegistry().get();
 		for (auto& pair : registry.mIdToItemMap)
         {
             pair.second.get()->setAllowOffhand(true);
