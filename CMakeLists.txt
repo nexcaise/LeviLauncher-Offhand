@@ -48,7 +48,7 @@ set_target_properties(dobby PROPERTIES
 
 target_link_libraries(preloader PUBLIC fmt::fmt glm::glm)
 
-include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/Dobby/include)
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/Dobby)
 
 add_library(AssetsManager SHARED src/main.cpp src/Item.cpp src/ItemRegistryRef.cpp)
 target_link_libraries(AssetsManager preloader log)
