@@ -44,7 +44,7 @@ void hook(
     //ItemRegistry* registry = itemRegistry._lockRegistry().get();
     ItemRegistry* registry = itemRegistry.mItemRegistry.lock().get();
 
-    for (auto& pair : registry->mIdToItemMap) {
+    for (auto& pair : registry.mIdToItemMap) {
         pair.second->setAllowOffhand(true);
     }
 }
