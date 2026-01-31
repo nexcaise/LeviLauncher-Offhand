@@ -24,14 +24,14 @@ namespace cereal { struct ReflectionCtx; }
 
 static void (*orig)(
         VanillaItems*,
-        void*,
+        const cereal::ReflectionCtx&,
 		const ItemRegistryRef,
 		const BaseGameVersion&,
 		const Experiments&) = nullptr;
 
 void hook(
 		VanillaItems* self,
-		void* uk,
+		const cereal::ReflectionCtx& uk,
 		const ItemRegistryRef itemRegistry,
 		const BaseGameVersion& baseGameVersion,
 		const Experiments& experiments
@@ -44,12 +44,12 @@ void hook(
 			baseGameVersion,
 			experiments
 		);
-
+/*
 		ItemRegistry* registry = itemRegistry._lockRegistry().get();
 
         for (auto& pair : registry->mIdToItemMap) {
             pair.second->setAllowOffhand(true);
-        }
+        }*/
 }
 
 __attribute__((constructor))
