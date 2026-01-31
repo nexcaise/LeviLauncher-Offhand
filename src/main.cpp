@@ -56,7 +56,8 @@ __attribute__((constructor))
 void Init() {
     GlossInit(true);
     uintptr_t addr = pl::signature::pl_resolve_signature(
-        "FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 F3 03 02 AA F4 03 01 AA 61 0A 80 52 22 00 80 52",
+        "FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 FF 07 40 D1 FF 83 00 D1 48 D0 3B D5 EA 83 00 B2",
+        //"FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 F3 03 02 AA F4 03 01 AA 61 0A 80 52 22 00 80 52",
         "libminecraftpe.so"
     );
 
