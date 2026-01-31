@@ -39,9 +39,16 @@ if(NOT preloader_android_POPULATED)
     add_subdirectory(${preloader_android_SOURCE_DIR} ${preloader_android_BINARY_DIR})
 endif()
 
+add_library(dobby STATIC IMPORTED)
+
+set_target_properties(dobby PROPERTIES
+    IMPORTED_LOCATION
+    ${CMAKE_SOURCE_DIR}/Dobby/libdobby.a
+)
+
 target_link_libraries(preloader PUBLIC fmt::fmt glm::glm)
 
-include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/Dobby/include)
 
 add_library(AssetsManager SHARED src/main.cpp src/Item.cpp src/ItemRegistryRef.cpp)
 target_link_libraries(AssetsManager preloader log)
