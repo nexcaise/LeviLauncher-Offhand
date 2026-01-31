@@ -10,12 +10,16 @@ set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--gc-sections,--
 
 include(FetchContent)
 
+FetchContent_Declare(glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 0.9.9.8)
+
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
     GIT_TAG 10.2.1
 )
-FetchContent_MakeAvailable(fmt)
+FetchContent_MakeAvailable(fmt glm)
 
 FetchContent_Declare(
     preloader_android
@@ -35,7 +39,7 @@ if(NOT preloader_android_POPULATED)
     add_subdirectory(${preloader_android_SOURCE_DIR} ${preloader_android_BINARY_DIR})
 endif()
 
-target_link_libraries(preloader PUBLIC fmt::fmt)
+target_link_libraries(preloader PUBLIC fmt::fmt glm::glm)
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
 

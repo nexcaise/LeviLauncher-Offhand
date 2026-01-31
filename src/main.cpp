@@ -10,8 +10,8 @@
 #include "util/ItemStackBase.h"
 
 #include "pl/Gloss.h"
-#include "HoverRenderer.hpp"
-#include "MinecraftUIRenderContext.hpp"
+#include "util/HoverRenderer.hpp"
+#include "util/MinecraftUIRenderContext.hpp"
 
 
 #define LOG_TAG "HmmAja"
