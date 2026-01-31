@@ -6,6 +6,6 @@
 
 class ItemRegistry {
 public:
-    std::vector<SharedPtr<Item>>> mItemRegistry;
+    std::vector<SharedPtr<Item>> mItemRegistry;
     std::unordered_map<int32_t, WeakPtr<Item>> mIdToItemMap;
 };
