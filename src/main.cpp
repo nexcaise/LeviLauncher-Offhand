@@ -55,7 +55,7 @@ void hook(
 __attribute__((constructor))
 void Init() {
     GlossInit(true);
-    uintptr_t sym = pl::signature::pl_resolve_signature(
+    uintptr_t addr = pl::signature::pl_resolve_signature(
         "FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 F3 03 02 AA F4 03 01 AA 61 0A 80 52 22 00 80 52",
         "libminecraftpe.so"
     );
@@ -65,5 +65,5 @@ void Init() {
         return;
     }
     
-    pl::hook::pl_hook((pl::hook::FuncPtr)sym, (pl::hook::FuncPtr)hook, (pl::hook::FuncPtr*)&orig, pl::hook::PriorityHighest);
+    pl::hook::pl_hook((pl::hook::FuncPtr)addr, (pl::hook::FuncPtr)hook, (pl::hook::FuncPtr*)&orig, pl::hook::PriorityHighest);
 }
