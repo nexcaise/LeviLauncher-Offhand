@@ -45,7 +45,8 @@ void hook(
 
     for (auto& pair : registry->mIdToItemMap)
     {
-        pair.second.get()->setAllowOffhand(true);
+        LOGI("ns: %s", pair.second.get()->mNamespace.c_str());
+        
     }
 }
 
