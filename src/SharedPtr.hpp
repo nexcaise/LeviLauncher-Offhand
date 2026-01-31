@@ -1,5 +1,5 @@
 #pragma once
-//directly taken from amethyst
+
 #include <atomic>
 #include <type_traits>
 #include <utility>
