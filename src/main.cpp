@@ -40,6 +40,12 @@ void hook(
 ) {
     LOGI("Hook::Running");
     orig(self, uk, itemRegistry, baseGameVersion, experiments);
+    
+    ItemRegistry* registry = itemRegistry._lockRegistry().get();
+
+    for (auto& pair : registry->mIdToItemMap) {
+        pair.second->setAllowOffhand(true);
+    }
 }
 
 __attribute__((constructor))
