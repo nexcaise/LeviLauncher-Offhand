@@ -8,6 +8,7 @@
 #include <string>
 
 #include "pl/Hook.h"
+#include "pl/Signature.h"
 #include "pl/Gloss.h"
 #include "ItemRegistry.hpp"
 #include "ItemRegistryRef.hpp"
@@ -54,15 +55,15 @@ void hook(
 __attribute__((constructor))
 void Init() {
     GlossInit(true);
-    void* sym = (void*)GlossSymbol(GlossOpen("libminecraftpe.so"),
-        "_ZN12VanillaItems13registerItemsERN6cereal13ReflectionCtxE15ItemRegistryRefRK15BaseGameVersionRK11ExperimentsE3$_0", nullptr);
-    if (sym) {
-        GHook h = GlossHook(sym, (void*)hook, (void**)&orig);
-        if (h) {
-            LOGE("Failed hook!");
-            return;
-        }
-    } else {
-        LOGE("Failed hook, sym not found");
+    uintptr_t addr = pl::signature::pl_resolve_signature(
+        "FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 F3 03 02 AA F4 03 01 AA 61 0A 80 52 22 00 80 52",
+        "libminecraftpe.so"
+    );
+
+    if (!addr) {
+        LOGE("SignatureNot found!");
+        return;
     }
+    
+    pl::hook::pl_hook((pl::hook::FuncPtr)sym, (pl::hook::FuncPtr)hook, (pl::hook::FuncPtr*)&orig, pl::hook::PriorityHighest);
 }
