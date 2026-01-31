@@ -39,6 +39,8 @@ if(NOT preloader_android_POPULATED)
     add_subdirectory(${preloader_android_SOURCE_DIR} ${preloader_android_BINARY_DIR})
 endif()
 
+target_link_libraries(preloader PUBLIC fmt::fmt glm::glm)
+
 add_library(dobby STATIC IMPORTED)
 set_target_properties(dobby PROPERTIES
     IMPORTED_LOCATION
