@@ -1,16 +1,10 @@
-/// @symbolgeneration
 #pragma once
 #include <unordered_map>
+#include <vector>
 #include "SharedPtr.hpp"
 #include "Item.hpp"
-#include <vector>
-/*
-class StringHash {
-public:
-    int mHash;
-    bool operator==(StringHash const& o) const { return mHash == o.mHash; }
-};
-*/
+#include "StringHash.hpp"
+
 class ItemRegistry {
 public:
     std::vector<SharedPtr<Item>> mItemRegistry;

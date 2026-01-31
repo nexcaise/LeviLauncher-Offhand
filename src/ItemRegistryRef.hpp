@@ -1,25 +1,7 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
-#include "SharedPtr.hpp"
-#include "Item.hpp"
-
-class ItemRegistry;
-
-class StringHash {
-public:
-    int mHash;
-    bool operator==(StringHash const& o) const { return mHash == o.mHash; }
-};
-
-namespace std {
-template<>
-struct hash<StringHash> {
-    size_t operator()(StringHash const& s) const noexcept {
-        return std::hash<int>()(s.mHash);
-    }
-};
-}
+#include "ItemRegistry.hpp"
 
 class ItemRegistryRef {
 public:
