@@ -42,10 +42,12 @@ void hook(
     orig(self, uk, itemRegistry, baseGameVersion, experiments);
     
     //ItemRegistry* registry = itemRegistry._lockRegistry().get();
-    ItemRegistry* registry = itemRegistry.mItemRegistry.lock().get();
+    //ItemRegistry* registry = itemRegistry.mItemRegistry.lock().get();
 
-    for (auto& pair : registry.mIdToItemMap) {
-        pair.second->setAllowOffhand(true);
+    auto registry = itemRegistry._lockRegistry();
+
+    for (auto& item : registry->mItemRegistry) {
+        item->setAllowOffhand(true);
     }
 }
 
