@@ -11,15 +11,6 @@ public:
     bool operator==(StringHash const& o) const { return mHash == o.mHash; }
 };
 
-namespace std {
-template<>
-struct hash<StringHash> {
-    size_t operator()(StringHash const& s) const noexcept {
-        return std::hash<int>()(s.mHash);
-    }
-};
-}
-
 class ItemRegistry {
 public:
     std::vector<SharedPtr<Item>> mItemRegistry;
