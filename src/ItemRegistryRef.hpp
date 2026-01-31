@@ -14,10 +14,11 @@ public:
 
 class ItemRegistryRef {
 public:
+    std::unordered_map<StringHash, WeakPtr<Item>> nameToItemMap;
     std::weak_ptr<ItemRegistry> mWeakRegistry;
     std::weak_ptr<ItemRegistry> mItemRegistry;
     
-    virtual std::unordered_map<StringHash, WeakPtr<Item>> const& getNameToItemMap() const;
+    std::unordered_map<StringHash, WeakPtr<Item>> const& getNameToItemMap() const;
 
     std::shared_ptr<ItemRegistry> _lockRegistry() const;
 };
