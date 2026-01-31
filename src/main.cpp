@@ -44,10 +44,13 @@ void hook(
     //ItemRegistry* registry = itemRegistry._lockRegistry().get();
     //ItemRegistry* registry = itemRegistry.mItemRegistry.lock().get();
 
-    auto registry = itemRegistry._lockRegistry();
+    auto registry = itemRegistry.mWeakRegistry.lock();
 
-    for (auto& item : registry->mItemRegistry) {
-        item->setAllowOffhand(true);
+    for (auto& [id, weak] : registry->mIdToItemMap) {
+        auto item = weak.lock();
+        if (item) {
+            item->setAllowOffhand(true);
+        }
     }
 }
 
