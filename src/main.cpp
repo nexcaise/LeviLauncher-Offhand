@@ -41,16 +41,11 @@ void hook(
     LOGI("Hook::Running");
     orig(self, uk, itemRegistry, baseGameVersion, experiments);
     
-    ItemRegistry* registry = itemRegistry._lockRegistry().get();
-    //ItemRegistry* registry = itemRegistry.mItemRegistry.lock().get();
+    ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
 
-    //auto registry = itemRegistry.mWeakRegistry.lock();
-
-    for (auto& [id, weak] : registry->mIdToItemMap) {
-        auto item = weak;
-        if (item) {
-            item->setAllowOffhand(true);
-        }
+    for (auto& pair : registry->mIdToItemMap)
+    {
+        pair.second.get()->setAllowOffhand(true);
     }
 }
 
