@@ -39,13 +39,20 @@ void hook(
         Experiments const& experiments
 ) {
     LOGI("Hook::Start");
+    orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
-    for (auto& pair : registry->mIdToItemMap)
-    {
-        pair.second.get()->setAllowOffhand(true);
+    
+    try {
+        for (auto& pair : registry->mIdToItemMap)
+        {
+            pair.second.get()->setAllowOffhand(true);
+        }
+    }
+    catch (const char* msg) {
+        LOGE(msg);
     }
     LOGI("Hook::End");
-    orig(self, ctx, itemRegistry, baseGameVersion, experiments);
+    
 }
 
 __attribute__((constructor))
