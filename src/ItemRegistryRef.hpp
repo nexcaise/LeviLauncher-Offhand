@@ -7,5 +7,7 @@ class ItemRegistryRef {
 public:
     std::weak_ptr<ItemRegistry> mWeakRegistry;
     
-    inline int getItemCount() const;
+    inline int getItemCount() {
+        return 1;
+    };
 };
