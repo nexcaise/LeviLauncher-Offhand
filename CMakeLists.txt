@@ -51,7 +51,6 @@ add_library(OffhandMod SHARED
     src/main.cpp
     src/util/Item.cpp
     src/util/ItemRegistryRef.cpp
-    src/util/string/StringHash.cpp
 )
 
 target_include_directories(OffhandMod PRIVATE
