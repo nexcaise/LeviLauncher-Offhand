@@ -9,5 +9,5 @@ public:
     
     inline int getItemCount() {
         return 1;
-    };
+    } const;
 };
