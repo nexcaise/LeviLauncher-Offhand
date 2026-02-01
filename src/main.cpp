@@ -40,14 +40,15 @@ void hook(
 ) {
     LOGI("Hook::Start");
     
-    ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
+    /*ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
     //ItemRegistry& reg = *registry;
     
     for (auto& pair : registry->mIdToItemMap)
     {
         LOGI("ns: %s", pair.second.get()->mNamespace.c_str());
         //LOGI("rn: %s", pair.second.get()->mRawNameId.c_str());
-    }
+    }*/
+    LOGI("Item Count: %d", itemRegistry.getItemCount());
     LOGI("Hook::End");
     orig(self, /*uk,*/ itemRegistry, baseGameVersion, experiments);
 }
