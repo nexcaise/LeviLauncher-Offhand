@@ -40,7 +40,7 @@ void hook(
 ) {
     LOGI("Hook::Running");
     //temRegistry.shutdown();
-    orig(self, uk, itemRegistry, baseGameVersion, experiments);
+    orig(self, /*uk*/, itemRegistry, baseGameVersion, experiments);
     
 	ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
     //ItemRegistry& reg = *registry;
