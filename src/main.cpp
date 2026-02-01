@@ -39,17 +39,17 @@ void hook(
         const Experiments& experiments
 ) {
     LOGI("Hook::Running");
-    itemRegistry.shutdown();
+    //temRegistry.shutdown();
     orig(self, uk, itemRegistry, baseGameVersion, experiments);
-    /*
-	ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
-    ItemRegistry& reg = *registry;
     
-    for (auto& pair : reg.mIdToItemMap)
+	ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
+    //ItemRegistry& reg = *registry;
+    
+    for (auto& pair : registry->mIdToItemMap)
     {
         LOGI("ns: %s", pair.second.get()->mNamespace.c_str());
-        LOGI("rn: %s", pair.second.get()->mRawNameId.c_str());
-    }*/
+        //LOGI("rn: %s", pair.second.get()->mRawNameId.c_str());
+    }
 }
 
 __attribute__((constructor))
