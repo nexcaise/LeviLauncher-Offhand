@@ -7,5 +7,5 @@ class ItemRegistryRef {
 public:
     std::weak_ptr<ItemRegistry> mWeakRegistry;
     
-    inline void shutdown() {};
+    inline void shutdown() const;
 };
