@@ -43,7 +43,7 @@ void hook(
     //ItemRegistry* registry = ;
     
     try {
-        for (auto& pair : itemRegistry._lockRegistry().get().mIdToItemMap)
+        for (auto& pair : itemRegistry._lockRegistry().get()->mIdToItemMap)
         {
             pair.second.get()->setAllowOffhand(true);
         }
