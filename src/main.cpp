@@ -41,7 +41,10 @@ void hook(
     LOGI("Hook::Running");
     orig(self, uk, itemRegistry, baseGameVersion, experiments);
     
-    for (auto& pair : itemRegistry._lockRegistry()->mIdToItemMap)
+    ItemRegistry* registryPtr = itemRegistry._lockRegistry();
+    ItemRegistry& reg = *registryPtr;
+    
+    for (auto& pair : reg.mIdToItemMap)
     {
         LOGI("ns: %s", pair.second.get()->mNamespace.c_str());
         LOGI("rn: %s", pair.second.get()->mRawNameId.c_str());
