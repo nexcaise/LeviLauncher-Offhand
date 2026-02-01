@@ -45,7 +45,7 @@ void hook(
         pair.second.get()->setAllowOffhand(true);
     }
     LOGI("Hook::End");
-    orig(self, uk, itemRegistry, baseGameVersion, experiments);
+    orig(self, ctx, itemRegistry, baseGameVersion, experiments);
 }
 
 __attribute__((constructor))
