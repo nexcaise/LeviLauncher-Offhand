@@ -9,9 +9,9 @@
 
 #include "pl/Signature.h"
 #include "pl/Gloss.h"
-#include "ItemRegistry.hpp"
-#include "ItemRegistryRef.hpp"
-#include "VanillaItems.hpp"
+#include "util/ItemRegistry.hpp"
+#include "util/ItemRegistryRef.hpp"
+#include "util/VanillaItems.hpp"
 
 #define LOG_TAG "HmmAja"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -40,17 +40,17 @@ void hook(
 ) {
     LOGI("Hook::Start");
     orig(self, ctx, itemRegistry, baseGameVersion, experiments);
-    ItemRegistry* registry = itemRegistry.mWeakRegistry.lock().get();
+    ItemRegistry* registry = itemRegistry._lockRegistry().get();
     
-    try {
+    //try {
         for (auto& pair : registry->mIdToItemMap)
         {
             pair.second.get()->setAllowOffhand(true);
         }
-    }
+    /*}
     catch (const char* msg) {
         LOGE(msg);
-    }
+    }*/
     LOGI("Hook::End");
     
 }

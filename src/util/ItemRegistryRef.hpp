@@ -1,9 +1,11 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
-#include "ItemRegistry.hpp"
+#include "util/ItemRegistry.hpp"
 
 class ItemRegistryRef {
 public:
     std::weak_ptr<ItemRegistry> mWeakRegistry;
+    
+    std::shared_ptr<ItemRegistry> _lockRegistry() const;
 };
