@@ -23,7 +23,7 @@ namespace cereal { struct ReflectionCtx; }
 
 using TargetFn = void(*)(
         VanillaItems*,
-        const cereal::ReflectionCtx&,
+        //const cereal::ReflectionCtx&,
         const ItemRegistryRef,
         const BaseGameVersion&,
         const Experiments&
@@ -33,7 +33,7 @@ static TargetFn orig = nullptr;
 
 void hook(
         VanillaItems* self,
-        const cereal::ReflectionCtx& uk,
+        //const cereal::ReflectionCtx& uk,
         const ItemRegistryRef itemRegistry,
         const BaseGameVersion& baseGameVersion,
         const Experiments& experiments
