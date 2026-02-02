@@ -48,6 +48,12 @@ void hook(
         LOGI("Registry expired");
         return;
     }
+    
+    auto& wp = itemRegistry.mWeakRegistry;
+    LOGI("weak_ptr addr=%p", &wp);
+
+    auto spi = wp.lock();
+    LOGI("lock result=%p", spi.get());
 
     ItemRegistry* reg = sp.get();
     LOGI("Registry ptr=%p", reg);
