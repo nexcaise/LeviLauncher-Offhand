@@ -39,14 +39,19 @@ void hook(
         Experiments const& experiments
 ) {
     LOGI("Hook::Start");
-    orig(self, ctx, itemRegistry, baseGameVersion, experiments);
 
-    for (auto& pair : itemRegistry.mWeakRegistry.lock().get()->mIdToItemMap)
-    {
-        pair.second.get()->setAllowOffhand(true);
+    if (orig) {
+        orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
+
+    uint8_t* p = reinterpret_cast<uint8_t*>(&itemRegistry);
+    for (int i = 0; i < 0x100; i += 8) {
+        uint64_t v;
+        memcpy(&v, p + i, sizeof(v));
+        LOGI("+0x%02X : %016llX", i, v);
+    }
+
     LOGI("Hook::End");
-    
 }
 
 __attribute__((constructor))
