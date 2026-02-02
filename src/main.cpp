@@ -57,7 +57,7 @@ void hook(
     auto spi = wp.lock();
     LOGI("lock result=%p", spi.get());
 
-    ItemRegistry* reg = sp.get();
+    ItemRegistry* reg = spi.get();
     LOGI("Registry ptr=%p", reg);
 
     LOGI("Hook::End");
