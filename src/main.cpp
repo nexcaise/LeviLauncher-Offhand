@@ -11,7 +11,7 @@
 #include "pl/Gloss.h"
 #include "util/ItemRegistry.hpp"
 #include "util/ItemRegistryRef.hpp"
-#include "util/VanillaItems.hpp"
+//#include "util/VanillaItems.hpp"
 
 #define LOG_TAG "HmmAja"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -19,6 +19,7 @@
 
 class BaseGameVersion;
 class Experiments;
+class VanillaItems;
 namespace cereal { struct ReflectionCtx; }
 
 using TargetFn = void(*)(
@@ -45,7 +46,7 @@ void hook(
         orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
     
-    auto sp = itemRegistry.mWeakRegistry.lock();
+    auto sp = itemRegistry.mItemRegistry.lock();
     if (!sp) {
         LOGI("Registry expired");
         LOGI("Hook::End");

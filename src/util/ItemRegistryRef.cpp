@@ -2,6 +2,6 @@
 
 std::shared_ptr<ItemRegistry> ItemRegistryRef::_lockRegistry() const
 {
-    auto lock = mWeakRegistry.lock();
+    auto lock = mItemRegistry.lock();
     return lock;
 }
