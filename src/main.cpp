@@ -13,6 +13,14 @@
 #include "util/ItemRegistryRef.hpp"
 //#include "util/VanillaItems.hpp"
 
+#include <thread>
+#include <chrono>
+
+/*
+std::this_thread::sleep_for(std::chrono::seconds(1));
+std::this_thread::sleep_for(std::chrono::milliseconds(500));
+std::this_thread::sleep_for(std::chrono::microseconds(100));*/
+
 #define LOG_TAG "HmmAja"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
@@ -40,6 +48,12 @@ void hook(
         Experiments const& experiments
 ) {
     LOGI("Hook::Start");
+    if (orig) {
+        LOGI("Orig();");
+        orig(self, ctx, itemRegistry, baseGameVersion, experiments);
+    }
+    
+    std::this_thread::sleep_for(std::chrono::seconds(10));
     
     auto sp = itemRegistry._lockRegistry();
     if (!sp) {
@@ -51,11 +65,6 @@ void hook(
     for (auto& pair : sp.get()->mIdToItemMap)
     {
         pair.second.get()->setAllowOffhand(true);
-    }
-
-    if (orig) {
-        LOGI("Orig();");
-        orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
     
     LOGI("Hook::End");
