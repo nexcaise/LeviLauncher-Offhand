@@ -43,25 +43,14 @@ void hook(
     if (orig)
         orig(self, ctx, itemRegistry, baseGameVersion, experiments);
 
-    uint8_t* p = reinterpret_cast<uint8_t*>(&itemRegistry);
-
-    for (int i = 0; i < 0x40; i += 8) {
-        uint64_t v;
-        memcpy(&v, p + i, 8);
-        LOGI("[ItemRegistryRef +0x%02X] %016llX", i, v);
+    auto sp = itemRegistry.mWeakRegistry.lock();
+    if (!sp) {
+        LOGI("Registry expired");
+        return;
     }
 
-    uint64_t regPtr;
-    memcpy(&regPtr, p + 0x18, 8);
-
-    if (regPtr) {
-        uint8_t* r = reinterpret_cast<uint8_t*>(regPtr);
-        for (int i = 0; i < 0x80; i += 8) {
-            uint64_t v;
-            memcpy(&v, r + i, 8);
-            LOGI("[Registry +0x%02X] %016llX", i, v);
-        }
-    }
+    ItemRegistry* reg = sp.get();
+    LOGI("Registry ptr=%p", reg);
 
     LOGI("Hook::End");
 }
