@@ -46,7 +46,7 @@ void hook(
         orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
     
-    auto sp = itemRegistry.mItemRegistry.lock();
+    auto sp = itemRegistry._lockRegistry();
     if (!sp) {
         LOGI("Registry expired");
         LOGI("Hook::End");

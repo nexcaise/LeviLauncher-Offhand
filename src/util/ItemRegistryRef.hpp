@@ -5,7 +5,10 @@
 
 class ItemRegistryRef {
 public:
-    std::weak_ptr<ItemRegistry> mItemRegistry;
-    
-    std::shared_ptr<ItemRegistry> _lockRegistry() const;
+    std::shared_ptr<ItemRegistry> _lockRegistry() const {
+        auto wp = reinterpret_cast<const std::weak_ptr<ItemRegistry>*>(
+            reinterpret_cast<const uint8_t*>(this) + 0x18
+        );
+        return wp->lock();
+    }
 };
