@@ -1,0 +1,41 @@
+#pragma once
+
+#include <dobby.h>
+#include "pl/Signature.h"
+#include "pl/Logger.h"
+#include "util/InteractionResult.hpp"
+#include "world/item/ItemStack.hpp"
+#include "world/item/Item.hpp"
+/*
+//#include <amethyst/runtime/events/RegisterEvents.hpp"
+#include "world/item/registry/ItemRegistry.hpp"
+#include "world/actor/player/Player.hpp"
+#include "world/actor/player/PlayerInventory.hpp"
+#include "world/actor/player/Inventory.hpp"
+#include "world/level/BlockPos.hpp"
+#include "world/level/ILevel.hpp"
+#include "world/level/BlockSource.hpp"
+#include "world/entity/components/ActorEquipmentComponent.hpp"
+#include "world/entity/components/StateVectorComponent.hpp"
+#include "world/gamemode/GameMode.hpp"
+#include "world/item/ItemDescriptorCount.hpp"
+#include "world/inventory/transaction/ItemUseInventoryTransaction.hpp"
+#include "world/Facing.hpp"
+#include "world/gamemode/GameModeMessenger.hpp"
+#include "world/inventory/network/ItemStackNetManagerBase.hpp"
+#include "world/events/PlayerEventListener.hpp"
+#include "world/inventory/transaction/ComplexInventoryTransaction.hpp"
+#include "world/inventory/transaction/InventoryTransactionManager.hpp"
+#include "world/level/BlockSource.hpp"
+#include "world/level/Level.hpp"
+#include "world/level/BlockPalette.hpp"
+#include "world/events/BlockEventCoordinator.hpp"
+#include "client/renderer/game/ItemInHandRenderer.hpp"
+#include "deps/renderer/MatrixStack.hpp"
+/*#include <amethyst/runtime/events/InputEvents.hpp"
+#include <amethyst/runtime/HookManager.hpp"
+#include <amethyst/runtime/ModContext.hpp"*//*
+#include "features/OffhandSwingComponent.hpp"
+#include "world/SimpleContainer.hpp"*/
+
+void OffhandHooks();

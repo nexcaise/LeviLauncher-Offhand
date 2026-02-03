@@ -49,7 +49,9 @@ set_target_properties(dobby PROPERTIES
 
 add_library(OffhandMod SHARED
     src/main.cpp
-    src/util/Item.cpp
+    src/world/item/ItemStack.cpp
+    src/world/item/Item.cpp
+    src/features/Offhand.cpp
 )
 
 target_include_directories(OffhandMod PRIVATE

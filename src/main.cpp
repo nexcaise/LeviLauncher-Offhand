@@ -1,4 +1,5 @@
-#include <jni.h>
+#include "features/Offhand.hpp"
+/*#include <jni.h>
 #include <android/log.h>
 #include <dlfcn.h>
 #include <unistd.h>
@@ -15,11 +16,6 @@
 
 #include <thread>
 #include <chrono>
-
-/*
-std::this_thread::sleep_for(std::chrono::seconds(1));
-std::this_thread::sleep_for(std::chrono::milliseconds(500));
-std::this_thread::sleep_for(std::chrono::microseconds(100));*/
 
 #define LOG_TAG "HmmAja"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
@@ -52,7 +48,7 @@ void hook(
         LOGI("Orig();");
         orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
-    
+  
     std::this_thread::sleep_for(std::chrono::seconds(10));
     
     auto sp = itemRegistry._lockRegistry();
@@ -69,10 +65,11 @@ void hook(
     
     LOGI("Hook::End");
 }
-
+*/
 __attribute__((constructor))
 void Init() {
     GlossInit(true);
+    /*
     uintptr_t addr = pl::signature::pl_resolve_signature(
         //1.21.124
         //"FD 7B BA A9 FC 6F 01 A9 FA 67 02 A9 F8 5F 03 A9 F6 57 04 A9 F4 4F 05 A9 FD 03 00 91 FF 07 40 D1 FF 83 00 D1 48 D0 3B D5 EA 83 00 B2"
@@ -95,5 +92,6 @@ void Init() {
         LOGI("DobbyHook success");
     } else {
         LOGE("DobbyHook failed: %d", ret);
-    }
+    }*/
+    Offhand::OffhandHooks();
 }
