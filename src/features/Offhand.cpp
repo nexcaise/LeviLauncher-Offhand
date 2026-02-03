@@ -1,8 +1,8 @@
 #include "features/Offhand.hpp"
 //#include "util/Logger.hpp"
 
-pl::log::Logger log("OffhandMod");
-//Example: log.info("JNI call {}", 42);
+pl::log::Logger omlogger("OffhandMod");
+//Example: omlogger.info("JNI call {}", 42);
 
 //class GameMode
 /*
@@ -37,19 +37,19 @@ InteractionResult* useItemOn_hook(
         void* tb,
         bool isFirstEvent
 ) {
-    const Item *item = stack.getItem();
+    Item* item = stack.getItem();
     bool realMayUse = stack.mItem == nullptr;//!stack.mValid || stack.mItem == nullptr || stack.isNull() ||/* stack.mCount == 0 || !isSimTick ||*/ !item/* || item->canUseOnSimTick()*/;
 
     if (!realMayUse)
     {
-        log.info("May not use item: {}", stack);
-        return orig(self,stack,at,face,hit,tb,isFirstEvent);
+        omlogger.info("May not use item: {}", stack);
+        return useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
     }
     
-    log.info("item.setAllowOffhand(true);");
+    omlogger.info("item.setAllowOffhand(true);");
     item->setAllowOffhand(true);
 
-    return orig(self,stack,at,face,hit,tb,isFirstEvent);
+    return useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
 
 }
 
@@ -59,19 +59,19 @@ void OffhandHooks()
         "EC 13 40 F9 E8 03 16 AA",
         "libminecraftpe.so"
     );
-    if (!addr) {
-        log.error("Signature not found");
+    if (!useItemOn_addr) {
+        omlogger.error("Signature not found");
         return;
     }
-    log.info("Signature found at: {}", (void*)addr);
+    omlogger.info("Signature found at: {}", (void*)useItemOn_addr);
     int useItemOn_ret = DobbyHook(
         (void*)useItemOn_addr,
         (void*)useItemOn_hook,
         (void**)&useItemOn_orig
     );
     if (useItemOn_ret == 0) {
-        log.info("DobbyHook success");
+        omlogger.info("DobbyHook success");
     } else {
-        log.error("DobbyHook failed: {}", useItemOn_ret);
+        omlogger.error("DobbyHook failed: {}", useItemOn_ret);
     }
 }
