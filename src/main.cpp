@@ -6,6 +6,11 @@
 #include "util/InteractionResult.hpp"
 #include "world/item/ItemStack.hpp"
 #include "world/item/Item.hpp"
+#include <android/log.h>
+
+#define LOG_TAG "OffhandMod"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 pl::log::Logger omlogger("OffhandMod");
 
@@ -35,10 +40,12 @@ InteractionResult* useItemOn_hook(
 
     if (!realMayUse)
     {
+        LOGE("!stack");
         omlogger.info("May not use item");
         return useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
     }
     
+    LOGI("OK!");
     omlogger.info("item.setAllowOffhand(true);");
     item->setAllowOffhand(true);
 
@@ -54,6 +61,7 @@ void Init() {
         "libminecraftpe.so"
     );
     if (!useItemOn_addr) {
+        LOGE("signature not found!");
         omlogger.error("Signature not found");
         return;
     }
@@ -64,6 +72,7 @@ void Init() {
         (void**)&useItemOn_orig
     );
     if (useItemOn_ret == 0) {
+        LOGI("D ok!");
         omlogger.info("DobbyHook success");
     } else {
         omlogger.error("DobbyHook failed: {}", useItemOn_ret);
