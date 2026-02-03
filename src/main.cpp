@@ -54,6 +54,7 @@ InteractionResult* useItemOn_hook(
 
 __attribute__((constructor))
 void Init() {
+    logger.info("Init()");
     GlossInit(true);
     uintptr_t useItemOn_addr = pl::signature::pl_resolve_signature(
         "EC 13 40 F9 E8 03 16 AA",
