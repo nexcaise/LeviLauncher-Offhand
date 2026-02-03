@@ -1,27 +1,27 @@
 #include "features/Offhand.hpp"
 #include "pl/Gloss.h"
-/*#include <jni.h>
-#include <android/log.h>
+#include <jni.h>
+//#include <android/log.h>
 #include <dlfcn.h>
 #include <unistd.h>
 #include <cstring>
 #include <string>
 
-#include <dobby.h>
+//#include <dobby.h>
 
-#include "pl/Signature.h"
+//#include "pl/Signature.h"
 
-#include "util/ItemRegistry.hpp"
-#include "util/ItemRegistryRef.hpp"
+//#include "util/ItemRegistry.hpp"
+//#include "util/ItemRegistryRef.hpp"
 //#include "util/VanillaItems.hpp"
 
-#include <thread>
-#include <chrono>
+//#include <thread>
+//#include <chrono>
 
-#define LOG_TAG "HmmAja"
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
-
+//#define LOG_TAG "HmmAja"
+//#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
+//#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
+/*
 class BaseGameVersion;
 class Experiments;
 class VanillaItems;
