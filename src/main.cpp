@@ -6,17 +6,12 @@
 #include "util/InteractionResult.hpp"
 #include "world/item/ItemStack.hpp"
 #include "world/item/Item.hpp"
-#include <android/log.h>
-
-#define LOG_TAG "OffhandMod"
-#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
-#define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
 pl::log::Logger logger("Offhand");
 
 using useItemOnFn = InteractionResult* (*)(
         void*,
-        InteractionResult*,
+        //InteractionResult*,
         ItemStack&,
         void*,
         void*,
@@ -29,31 +24,29 @@ static useItemOnFn useItemOn_orig = nullptr;
 
 InteractionResult* useItemOn_hook(
         void* self,
-        InteractionResult* result,
         ItemStack& stack,
         void* at,
         void* face,
         void* hit,
         void* tb,
-        bool isFirstEvent
+        bool iFE
 ) {
     Item* item = stack.getItem();
+    InteractionResult* result = orig(self, stack, at, face, hit, tb, iFE);
     //bool realMayUse = stack.mItem == nullptr;//!stack.mValid || stack.mItem == nullptr || stack.isNull() ||/* stack.mCount == 0 || !isSimTick ||*/ !item/* || item->canUseOnSimTick()*/;
 
-    logger.info("Hmm: {}", result->mResult);
+    logger.info("res: {}", result->mResult);
     if (!item)
     {
-        LOGE("!stack");
         logger.info("May not use item");
-        result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
+        //result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
         return result;
     }
     
-    LOGI("OK!");
-    logger.info("item.setAllowOffhand(true);");
-    item->setAllowOffhand(true);
+    logger.info("allowOffhand: {}", item->mAllowOffhand);
+    //item->setAllowOffhand(true);
 
-    result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
+    //result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
     return result;
 
 }
@@ -66,18 +59,16 @@ void Init() {
         "libminecraftpe.so"
     );
     if (!useItemOn_addr) {
-        LOGE("signature not found!");
         logger.error("Signature not found");
         return;
     }
-    logger.info("Signature found at: {}", (void*)useItemOn_addr);
+    logger.info("Signature found!");
     int useItemOn_ret = DobbyHook(
         (void*)useItemOn_addr,
         (void*)useItemOn_hook,
         (void**)&useItemOn_orig
     );
     if (useItemOn_ret == 0) {
-        LOGI("D ok!");
         logger.info("DobbyHook success");
     } else {
         logger.error("DobbyHook failed: {}", useItemOn_ret);
