@@ -12,7 +12,7 @@
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, __VA_ARGS__)
 
-pl::log::Logger omlogger("OffhandMod");
+pl::log::Logger logger("Offhand");
 
 using useItemOnFn = InteractionResult* (*)(
         void*,
@@ -40,16 +40,17 @@ InteractionResult* useItemOn_hook(
     Item* item = stack.getItem();
     //bool realMayUse = stack.mItem == nullptr;//!stack.mValid || stack.mItem == nullptr || stack.isNull() ||/* stack.mCount == 0 || !isSimTick ||*/ !item/* || item->canUseOnSimTick()*/;
 
+    logger.info("Hmm: {}", result->mResult);
     if (!item)
     {
         LOGE("!stack");
-        omlogger.info("May not use item");
+        logger.info("May not use item");
         result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
         return result;
     }
     
     LOGI("OK!");
-    omlogger.info("item.setAllowOffhand(true);");
+    logger.info("item.setAllowOffhand(true);");
     item->setAllowOffhand(true);
 
     result->mResult = (int)InteractionResult::Result::SUCCESS | (int)InteractionResult::Result::SWING;//useItemOn_orig(self,stack,at,face,hit,tb,isFirstEvent);
@@ -66,10 +67,10 @@ void Init() {
     );
     if (!useItemOn_addr) {
         LOGE("signature not found!");
-        omlogger.error("Signature not found");
+        logger.error("Signature not found");
         return;
     }
-    omlogger.info("Signature found at: {}", (void*)useItemOn_addr);
+    logger.info("Signature found at: {}", (void*)useItemOn_addr);
     int useItemOn_ret = DobbyHook(
         (void*)useItemOn_addr,
         (void*)useItemOn_hook,
@@ -77,8 +78,8 @@ void Init() {
     );
     if (useItemOn_ret == 0) {
         LOGI("D ok!");
-        omlogger.info("DobbyHook success");
+        logger.info("DobbyHook success");
     } else {
-        omlogger.error("DobbyHook failed: {}", useItemOn_ret);
+        logger.error("DobbyHook failed: {}", useItemOn_ret);
     }
 }
