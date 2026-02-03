@@ -1,4 +1,3 @@
-/// @symbolgeneration
 #pragma once
 
 class Item {

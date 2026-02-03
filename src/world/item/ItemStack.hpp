@@ -1,5 +1,5 @@
-/// @symbols
 #pragma once
+#include "world/item/Item.hpp"
 
 class ItemStack {
 public:

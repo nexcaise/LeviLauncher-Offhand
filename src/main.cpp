@@ -1,4 +1,5 @@
 #include "features/Offhand.hpp"
+#include "pl/Gloss.h"
 /*#include <jni.h>
 #include <android/log.h>
 #include <dlfcn.h>
@@ -9,7 +10,7 @@
 #include <dobby.h>
 
 #include "pl/Signature.h"
-#include "pl/Gloss.h"
+
 #include "util/ItemRegistry.hpp"
 #include "util/ItemRegistryRef.hpp"
 //#include "util/VanillaItems.hpp"
@@ -93,5 +94,5 @@ void Init() {
     } else {
         LOGE("DobbyHook failed: %d", ret);
     }*/
-    Offhand::OffhandHooks();
+    OffhandHooks();
 }

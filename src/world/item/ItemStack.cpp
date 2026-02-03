@@ -1,5 +1,5 @@
-#include "world/item/Item.hpp"
+#include "world/item/ItemStack.hpp"
 
-Item* ItemStackBase::getItem() const {
+Item* ItemStack::getItem() const {
     return mItem.get();
 }

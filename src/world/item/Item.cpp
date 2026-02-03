@@ -1,4 +1,4 @@
-#include "util/Item.hpp"
+#include "world/item/Item.hpp"
 
 Item& Item::setAllowOffhand(bool allowOffhand) {
     mAllowOffhand = allowOffhand;
