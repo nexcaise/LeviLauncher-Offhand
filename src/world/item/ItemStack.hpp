@@ -1,10 +1,11 @@
 #pragma once
 #include "world/item/Item.hpp"
+#include "world/item/ItemStackBase.hpp"
 #include "util/SharedPtr.hpp"
 
-class ItemStack {
+class ItemStackNetIdVariant;
+
+class ItemStack : public ItemStackBase {
 public:
-    WeakPtr<Item> mItem;
-    
-    Item* getItem() const;
+    ItemStackNetIdVariant mNetIdVariant;
 };

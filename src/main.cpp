@@ -36,9 +36,9 @@ InteractionResult* useItemOn_hook(
         bool isFirstEvent
 ) {
     Item* item = stack.getItem();
-    bool realMayUse = stack.mItem == nullptr;//!stack.mValid || stack.mItem == nullptr || stack.isNull() ||/* stack.mCount == 0 || !isSimTick ||*/ !item/* || item->canUseOnSimTick()*/;
+    //bool realMayUse = stack.mItem == nullptr;//!stack.mValid || stack.mItem == nullptr || stack.isNull() ||/* stack.mCount == 0 || !isSimTick ||*/ !item/* || item->canUseOnSimTick()*/;
 
-    if (!realMayUse)
+    if (!item)
     {
         LOGE("!stack");
         omlogger.info("May not use item");
