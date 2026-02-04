@@ -102,7 +102,7 @@ bool buildBlock_hook(GameMode *self, void* pos, void* face, bool isSimTick) {
 
     const ItemStack &stack = playerInv.getSelectedItem();
     
-    const Item *item = stack.getItem();
+    Item *item = stack.getItem();
     
     if(!item->mAllowOffhand) item->setAllowOffhand(true);
     
