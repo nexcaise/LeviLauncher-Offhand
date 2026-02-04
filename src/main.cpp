@@ -111,7 +111,7 @@ bool buildBlock_hook(GameMode *self, void* pos, void* face, bool isSimTick) {
 
 void Hook_buildBlock() {
     uintptr_t addr = pl::signature::pl_resolve_signature(
-        "EC 13 40 F9 E8 03 16 AA",
+        "FF C3 04 D1 FD 7B 0D A9 FC 73 00 F9 FA 67 0F A9 F8 5F 10 A9 F6 57 11 A9 F4 4F 12 A9 FD 43 03 91 59 D0 3B D5 F6 03 03 2A",
         "libminecraftpe.so"
     );
     if (!addr) {
