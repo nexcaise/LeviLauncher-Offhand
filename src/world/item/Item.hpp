@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class Item {
 public:
     bool mAllowOffhand;
