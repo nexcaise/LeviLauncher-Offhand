@@ -9,6 +9,9 @@
 #include "world/item/registry/ItemRegistry.hpp"
 #include "world/item/registry/ItemRegistryRef.hpp"
 
+#include <chrono>
+#include <thread>
+
 Logger logger("Offhand");
 
 using registerItemsFn = void(*)(
@@ -44,6 +47,8 @@ void registerItems_hook(
         registerItems_orig(self, ctx, itemRegistry, baseGameVersion, experiments);
     }
     
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    
     auto sp = itemRegistry._lockRegistry();
     if (!sp) {
         logger.info("ItemRegistry Expired!");
@@ -74,6 +79,8 @@ InteractionResult* useItemOn_hook(
         logger.info("!item");
         return useItemOn_orig(self, stack, at, face, hit, tb, iFE);;
     }
+    
+    logger.info("Item namespace: {}", item->mNamespace);
 
     return useItemOn_orig(self, stack, at, face, hit, tb, iFE);
 }
