@@ -37,8 +37,8 @@ add_requires(
 
 target("preloader")
     set_kind("static")
-    add_files("preloader-android/src/pl/**/*.cpp")
-    add_headerfiles("preloader-android/src/pl/**/*.h")
+    add_files("preloader-android/src/pl/**.cpp")
+    add_headerfiles("preloader-android/src/pl/**.h")
     add_packages("fmt", "glm")
     add_includedirs("preloader-android/src", {public = true})
 
@@ -51,16 +51,16 @@ target("dobby")
 target("OffhandMod")
     set_kind("shared")
     add_files(
-        "src/**/*.cpp",
-        "src/**/*.c",
-        "include/**/*.cpp"
+        "src/**.cpp",
+        "src/**.c",
+        "include/**.cpp"
     )
     add_headerfiles(
-        "src/**/*.hpp",
-        "include/**/*.hpp",
-        "include/**/*.h",
-        "Dobby/**/*.hpp",
-        "Dobby/**/*.h"
+        "src/**.hpp",
+        "include/**.hpp",
+        "include/**.h",
+        "Dobby/**.hpp",
+        "Dobby/**.h"
     )
     add_includedirs(
         "include",
