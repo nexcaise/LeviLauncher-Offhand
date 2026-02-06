@@ -51,7 +51,7 @@ target("dobby")
 target("OffhandMod")
     set_kind("shared")
     add_files(
-        "src/**.cpp",
+        "src/**.cpp"
     )
     add_headerfiles(
         "src/**.hpp",
