@@ -37,8 +37,8 @@ add_requires(
 
 target("preloader")
     set_kind("static")
-    add_files("preloader-android/src/pl/**.cpp")
-    add_headerfiles("preloader-android/src/pl/**.h")
+    add_files("preloader-android/src/**.cpp")
+    add_headerfiles("preloader-android/src/**.h")
     add_packages("fmt", "glm")
     add_includedirs("preloader-android/src", {public = true})
 
@@ -66,6 +66,7 @@ target("OffhandMod")
         "include",
         "src",
         "Dobby",
+        "preloader-android/src",
         {public = true}
     )
     add_deps("preloader")
