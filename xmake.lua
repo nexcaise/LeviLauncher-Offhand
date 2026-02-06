@@ -32,14 +32,15 @@ add_repositories("xmake-repo https://github.com/xmake-io/xmake-repo.git")
 
 add_requires(
     "fmt 10.2.1",
-    "glm 0.9.9+8"
+    "glm 0.9.9+8",
+    "nlohmann_json 3.11.3"
 )
 
 target("preloader")
     set_kind("static")
     add_files("preloader-android/src/**.cpp")
     add_headerfiles("preloader-android/src/**.h")
-    add_packages("fmt", "glm")
+    add_packages("fmt", "glm", "nlohmann_json")
     add_includedirs("preloader-android/src", {public = true})
 
 target("dobby")
@@ -65,7 +66,7 @@ target("OffhandMod")
         {public = true}
     )
     add_deps("preloader")
-    add_packages("fmt", "glm")
+    add_packages("fmt", "glm", "nlohmann_json")
     add_links(
         "log",
         "dobby"
