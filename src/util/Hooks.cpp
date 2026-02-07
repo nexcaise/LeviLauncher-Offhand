@@ -2,7 +2,7 @@
 
 //Logger logger("Better Inventory");
 
-bool VHook(
+bool VHOOK(
     const char* typeinfoName,
     int vtableIndex,
     void* hook,
