@@ -5,8 +5,6 @@
 #include <string>
 #include <string_view>
 
-extern Logger logger("Better Inventory");
-
 class Logger {
     public:
         explicit Logger(std::string name) : loggerName(std::move(name)) {}
@@ -42,3 +40,5 @@ class Logger {
                                 loggerName.c_str(), msg.c_str());
         }
 };
+
+extern Logger logger;
