@@ -1,4 +1,4 @@
-#include "features/Hooks.hpp"
+#include "features/RegisterHooks.hpp"
 #include <string>
 
 class BaseGameVersion;
