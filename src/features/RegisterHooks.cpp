@@ -64,7 +64,7 @@ void RegisterHooks() {
     VHOOK(
         "19ShulkerBoxBlockItem",
         53,
-        ShulkerBoxBlockItem_appendFormattedHovertext_hook,
-        ShulkerBoxBlockItem_appendFormattedHovertext_orig
+        (void*)ShulkerBoxBlockItem_appendFormattedHovertext_hook,
+        (void**)&ShulkerBoxBlockItem_appendFormattedHovertext_orig
     );
 };
